@@ -11,6 +11,9 @@ const mongoose = require("mongoose");
 // const isAuth = require("./middleware/isAuth");
 const regController = require("./controller/regController");
 const loginController = require("./controller/loginController");
+const logoutController = require("./controller/logoutController");
+const isAuth = require("./middleware/isAuth");
+
 
 mongoose
     .connect("mongodb+srv://Omee:RizviRahman@learnmongodb.0pijh.mongodb.net/jobOffers?retryWrites=true&w=majority",{
@@ -44,11 +47,10 @@ app.use(
 
 app.use("/registration", regController);
 app.use("/login", loginController);
-app.use("/smoothies", (req, res)=>{ res.render("smoothies",{user: req.session.user}); });
+app.use("/smoothies", isAuth, (req, res)=>{ res.render("smoothies",{user: req.session.user}); });
+app.use("/logout", logoutController);
 
-app.use("/", (req, res)=>{ res.render("home",{user: null}); });
-
-
+app.use("/", (req, res)=>{ res.render("home",{user: req.session.user}); });
 
 
 PORT = 5000;
